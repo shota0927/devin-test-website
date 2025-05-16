@@ -46,7 +46,7 @@ export function TopPage() {
       <h1 className="text-3xl font-bold mb-8">Video Library</h1>
       
       <div className="mb-8 space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <h2 className="text-xl font-semibold mb-2">Filter by Tags</h2>
             <div className="flex flex-wrap gap-2">
@@ -63,7 +63,7 @@ export function TopPage() {
             </div>
           </div>
           
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row items-start md:items-center gap-4">
             {selectedTags.length > 0 && (
               <Button 
                 variant="ghost" 

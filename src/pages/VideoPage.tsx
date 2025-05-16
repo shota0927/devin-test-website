@@ -1,18 +1,36 @@
 import { useParams, Link } from "react-router-dom";
+import { useEffect, useRef } from "react";
 import { videos, getRelatedVideos } from "../data/videos";
 import { VideoCard } from "../components/VideoCard";
 import { Badge } from "../components/ui/badge";
 import { ArrowLeft, Heart } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { useFavorites } from "../context/FavoritesContext";
+import { useViews } from "../context/ViewsContext";
 
 export function VideoPage() {
   const { id } = useParams<{ id: string }>();
   const videoId = parseInt(id || "0");
   const { isFavorite, toggleFavorite } = useFavorites();
+  const { incrementViews, getVideoViews } = useViews();
+  const videoRef = useRef<HTMLVideoElement>(null);
   
   const video = videos.find(v => v.id === videoId);
   const relatedVideos = getRelatedVideos(videoId);
+  
+  useEffect(() => {
+    const handlePlay = () => {
+      incrementViews(videoId);
+    };
+    
+    const videoElement = videoRef.current;
+    if (videoElement) {
+      videoElement.addEventListener('play', handlePlay);
+      return () => {
+        videoElement.removeEventListener('play', handlePlay);
+      };
+    }
+  }, [videoId, incrementViews]);
   
   const handleFavoriteClick = () => {
     toggleFavorite(videoId);
@@ -41,6 +59,7 @@ export function VideoPage() {
         <div className="lg:col-span-2">
           <div className="aspect-video bg-black mb-4 overflow-hidden rounded-lg">
             <video 
+              ref={videoRef}
               src={video.videoUrl} 
               controls 
               className="w-full h-full"
@@ -64,7 +83,7 @@ export function VideoPage() {
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center text-gray-600">
               <span className="mr-4">{new Date(video.uploadDate).toLocaleDateString()}</span>
-              <span>{video.views.toLocaleString()} views</span>
+              <span>{getVideoViews(videoId).toLocaleString()} views</span>
             </div>
             
             <div className="flex flex-wrap gap-2">
