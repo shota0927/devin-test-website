@@ -4,7 +4,7 @@ import './App.css'
 
 import { VideoProvider } from './context/VideoContext'
 import { FavoritesProvider } from './context/FavoritesContext'
-import { ViewsProvider } from './context/ViewsContext'
+import { ViewsContextConnector } from './context/ViewsContextConnector'
 import { TopPage } from './pages/TopPage'
 import { VideoPage } from './pages/VideoPage'
 import { TagPage } from './pages/TagPage'
@@ -14,7 +14,7 @@ function App() {
   return (
     <VideoProvider>
       <FavoritesProvider>
-        <ViewsProvider>
+        <ViewsContextConnector>
           <Router>
             <div className="min-h-screen bg-gray-50">
               <header className="bg-white shadow-sm">
@@ -43,7 +43,7 @@ function App() {
               </footer>
             </div>
           </Router>
-        </ViewsProvider>
+        </ViewsContextConnector>
       </FavoritesProvider>
     </VideoProvider>
   )

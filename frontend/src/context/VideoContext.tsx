@@ -6,6 +6,7 @@ interface VideoContextType {
   tags: string[];
   loading: boolean;
   error: string | null;
+  updateVideoViewCount: (videoId: number, newViewCount: number) => void;
 }
 
 const VideoContext = createContext<VideoContextType | undefined>(undefined);
@@ -38,8 +39,21 @@ export function VideoProvider({ children }: { children: ReactNode }) {
     fetchData();
   }, []);
 
+  const updateVideoViewCount = (videoId: number, newViewCount: number) => {
+    console.log('VideoContext: Updating view count for video', videoId, 'to', newViewCount);
+    if (videos.length > 0) {
+      const updatedVideos = videos.map(video => 
+        video.id === videoId ? { ...video, views: newViewCount } : video
+      );
+      console.log('VideoContext: Setting updated videos state');
+      setVideos(updatedVideos);
+    } else {
+      console.warn('VideoContext: No videos in state to update');
+    }
+  };
+
   return (
-    <VideoContext.Provider value={{ videos, tags, loading, error }}>
+    <VideoContext.Provider value={{ videos, tags, loading, error, updateVideoViewCount }}>
       {children}
     </VideoContext.Provider>
   );
